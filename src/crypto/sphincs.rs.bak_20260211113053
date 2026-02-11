@@ -1,0 +1,8 @@
+﻿use pqcrypto_sphincsplus::sphincssha256128fsimple;
+use pqcrypto_traits::sign::DetachedSignature;
+
+pub fn sign(data: &[u8]) -> String {
+    let (_pk, sk) = sphincssha256128fsimple::keypair();
+    let sig = sphincssha256128fsimple::detached_sign(data, &sk);
+    hex::encode(sig.as_bytes())
+}
