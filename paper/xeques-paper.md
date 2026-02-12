@@ -96,3 +96,439 @@ XEQUES is guided by the following design principles:
 
 5. **Longevity**  
    Protocol artifacts must remain verifiable decades into the future.
+
+---
+
+## 5. Threat Model
+
+XEQUES is designed under the assumption that autonomous systems operate in
+hostile, partially observable, and adversarial environments. The protocol
+explicitly separates *command authorization* from *command execution* and
+treats the device as the final authority on execution truth.
+
+### 5.1 Adversary Capabilities
+
+An adversary MAY:
+
+- Observe all network traffic (full passive surveillance)
+- Replay previously valid commands
+- Reorder command messages
+- Compromise or impersonate command authorities
+- Delay, drop, or selectively forward messages
+- Possess large-scale quantum computing capabilities
+- Attempt long-term cryptanalysis against stored artifacts
+
+An adversary MAY NOT:
+
+- Forge post-quantum signatures without key compromise
+- Produce valid execution receipts without executing the command
+- Modify device-generated receipts without detection
+- Retroactively alter execution history once receipts are published
+
+### 5.2 Device Trust Boundary
+
+XEQUES assumes the device contains a trusted execution boundary capable of:
+
+- Secure key storage
+- Monotonic sequence enforcement
+- Receipt generation tied to execution completion
+
+If a device is fully compromised, XEQUES does not attempt to hide this fact.
+Instead, the compromise becomes *provable* through anomalous or missing receipts.
+
+This shifts security guarantees from *preventing failure* to *provable failure detection*.
+
+### 5.3 What XEQUES Explicitly Does Not Protect Against
+
+- Physical destruction of the device
+- Permanent denial-of-service
+- Side-channel leakage inside compromised hardware
+
+XEQUES focuses on **cryptographic truth**, not availability guarantees.
+
+---
+
+## 6. Cryptographic Design
+
+### 6.1 Cryptographic Primitives
+
+XEQUES implementations MUST support:
+
+- Post-quantum digital signatures  
+  (e.g., Dilithium, Falcon, SPHINCS+)
+- Collision-resistant cryptographic hash functions
+- Secure monotonic counters or sequence numbers
+
+No classical-only cryptography is permitted in the security-critical path.
+
+### 6.2 Device Identity
+
+Each device possesses a long-lived post-quantum keypair:
+
+- Private key: retained within the device
+- Public key: distributed via registries, certificates, or physical provisioning
+
+The public key defines the **cryptographic identity of the executor**,
+not merely the owner or manufacturer.
+
+### 6.3 Command Structure
+
+A command consists of:
+
+- Authority identifier
+- Target device identifier
+- Monotonic sequence number
+- Command payload
+- Post-quantum signature from the authority
+
+Authorization proves *intent* — not execution.
+
+### 6.4 Execution Receipt (PoCC)
+
+After executing a command, the device produces a **PoCC receipt** containing:
+
+- Hash of the received command
+- Execution result code
+- Device monotonic sequence number
+- Timestamp or logical clock (optional)
+- Post-quantum device signature
+
+The receipt is cryptographically bound to both the command and the execution.
+
+### 6.5 Verification
+
+Any verifier can independently check:
+
+1. Command signature validity
+2. Receipt signature validity
+3. Sequence monotonicity
+4. Command–receipt binding
+5. Absence of gaps or anomalies
+
+Verification requires **no network access** and **no trusted third party**.
+
+### 6.6 Long-Term Verifiability
+
+All XEQUES artifacts are designed to remain verifiable decades after creation.
+Receipts can be archived, notarized, or anchored into external systems, but
+XEQUES does not require blockchains, tokens, or global consensus.
+
+---
+
+
+---
+
+## 7. Protocol Flow
+
+This section defines the end-to-end execution lifecycle of XEQUES,
+from command issuance to long-term verification.
+
+### 7.1 Actors
+
+- **Authority (A)** — Entity authorized to issue commands
+- **Device (D)** — Autonomous system executing commands
+- **Verifier (V)** — Any party verifying execution correctness
+
+No global coordinator or consensus layer is required.
+
+---
+
+### 7.2 Command Issuance
+
+1. Authority constructs a command payload:
+   - target device identifier
+   - monotonic sequence number
+   - command data
+
+2. Authority signs the command using a post-quantum signature scheme.
+
+3. The signed command is transmitted to the device via any transport.
+
+Delivery ordering and reliability are *not* assumed.
+
+---
+
+### 7.3 Command Verification (Device-Side)
+
+Upon receiving a command, the device:
+
+1. Verifies the authority signature.
+2. Checks monotonic sequence validity.
+3. Confirms the command targets itself.
+4. Rejects the command if any check fails.
+
+No execution occurs unless all checks succeed.
+
+---
+
+### 7.4 Command Execution
+
+If verification succeeds:
+
+1. The device executes the command.
+2. Execution is completed fully or deterministically rejected.
+3. Partial execution MUST NOT produce a receipt.
+
+Execution semantics are device-defined but MUST be deterministic.
+
+---
+
+### 7.5 Receipt Generation (PoCC)
+
+After successful execution, the device generates a receipt containing:
+
+- hash(command)
+- execution result
+- device sequence number
+- optional timestamp or logical clock
+- device post-quantum signature
+
+This receipt constitutes **Proof-of-Command-Correctness (PoCC)**.
+
+---
+
+### 7.6 Receipt Publication
+
+Receipts MAY be:
+
+- stored locally
+- transmitted to auditors
+- anchored into external systems
+- archived offline
+
+XEQUES imposes **no publication mechanism**.
+The protocol defines verification, not storage.
+
+---
+
+### 7.7 Verification Flow
+
+A verifier independently:
+
+1. Verifies authority signature on the command.
+2. Verifies device signature on the receipt.
+3. Confirms hash(command) matches receipt.
+4. Checks monotonic progression.
+5. Detects missing or duplicated receipts.
+
+Verification requires only public keys and stored artifacts.
+
+---
+
+## 8. Formal Invariants
+
+XEQUES is defined by a small set of invariants that MUST hold
+for the protocol to be considered correct.
+
+---
+
+### Invariant 1: Execution Authenticity
+
+> Every valid receipt corresponds to exactly one executed command.
+
+It must be computationally infeasible to produce a receipt
+without performing the associated execution.
+
+---
+
+### Invariant 2: Non-Repudiation of Execution
+
+> A device cannot deny having executed a command for which it produced a receipt.
+
+The device signature binds execution irrevocably to the device identity.
+
+---
+
+### Invariant 3: Execution Finality
+
+> Once a receipt is produced, execution is final and immutable.
+
+Receipts cannot be altered, revoked, or reordered without detection.
+
+---
+
+### Invariant 4: Monotonic Progress
+
+> Device sequence numbers strictly increase.
+
+Any skipped, duplicated, or reordered sequence value is detectable
+by an offline verifier.
+
+---
+
+### Invariant 5: Authority Independence
+
+> Verification does not require trust in the authority after execution.
+
+Even if the authority is compromised, past receipts remain valid.
+
+---
+
+### Invariant 6: Transport Agnosticism
+
+> Security properties do not depend on transport guarantees.
+
+XEQUES remains correct under message delay, duplication, or reordering.
+
+---
+
+### Invariant 7: Quantum Forward Security
+
+> Stored artifacts remain verifiable in the presence of quantum adversaries.
+
+All cryptographic assumptions rely on post-quantum hardness.
+
+---
+
+
+---
+
+## 9. Security Analysis
+
+This section provides a structured security analysis of XEQUES
+and sketches proofs for its core guarantees.
+
+---
+
+### 9.1 Adversary Model
+
+The adversary is assumed to have the following capabilities:
+
+- Full network control (delay, drop, replay, reorder messages)
+- Read access to all stored commands and receipts
+- Ability to compromise authorities at any time
+- Ability to compromise devices *after* execution
+- Classical and quantum computational resources
+
+The adversary is **not** assumed to:
+- Control honest device execution environments at execution time
+- Break post-quantum cryptographic primitives
+
+---
+
+### 9.2 Trust Assumptions
+
+XEQUES makes minimal trust assumptions:
+
+1. Device private keys are secure at execution time.
+2. Post-quantum signature schemes are unforgeable.
+3. Device execution is deterministic for a given command.
+
+No assumption is made about:
+- Authority honesty over time
+- Network reliability
+- Global clocks
+- Consensus or ordering services
+
+---
+
+### 9.3 Proof Sketch: Execution Authenticity
+
+**Claim:**  
+An adversary cannot produce a valid receipt without execution.
+
+**Sketch:**  
+A receipt contains a post-quantum signature generated by the device
+*after* execution. Producing such a signature requires possession
+of the device private key at execution time.
+
+If execution is skipped, the adversary must either:
+- forge a post-quantum signature, or
+- compromise the device prior to execution.
+
+Both contradict the adversary model.
+
+---
+
+### 9.4 Proof Sketch: Non-Repudiation
+
+**Claim:**  
+A device cannot deny execution of a command for which it emitted a receipt.
+
+**Sketch:**  
+Receipts are signed using a device-bound post-quantum key.
+Signature unforgeability implies that the device produced the receipt.
+
+No trusted third party is required.
+
+---
+
+### 9.5 Proof Sketch: Replay Resistance
+
+**Claim:**  
+Replayed commands are detectable and non-executable.
+
+**Sketch:**  
+Each command includes a monotonic sequence number.
+Devices reject commands with non-increasing sequence values.
+
+Thus, replayed commands cannot advance device state
+and cannot produce new receipts.
+
+---
+
+### 9.6 Proof Sketch: Fork Detection
+
+**Claim:**  
+Forked execution histories are detectable by offline verifiers.
+
+**Sketch:**  
+Receipts encode sequence numbers and command hashes.
+Any fork produces conflicting receipts for the same sequence value.
+
+Offline verification detects divergence without network access.
+
+---
+
+### 9.7 Authority Compromise Resilience
+
+**Claim:**  
+Compromise of an authority does not invalidate past execution proofs.
+
+**Sketch:**  
+Receipts are device-signed and independent of authority state.
+Authority keys are only used for authorization, not finality.
+
+Thus, historical receipts remain verifiable indefinitely.
+
+---
+
+### 9.8 Quantum Adversary Resistance
+
+**Claim:**  
+XEQUES remains secure under quantum adversaries.
+
+**Sketch:**  
+All cryptographic guarantees reduce to post-quantum signature security.
+No discrete log, factoring, or symmetric assumptions are relied upon.
+
+Security degrades only if post-quantum primitives are broken.
+
+---
+
+## 10. Failure Modes and Limitations
+
+XEQUES intentionally does **not** address:
+
+- Correctness of physical execution
+- Safety of command semantics
+- Byzantine hardware behavior
+- Malicious device firmware
+
+These concerns are explicitly out of scope and must be addressed
+by higher-layer safety systems.
+
+---
+
+## 11. Comparison to Existing Systems
+
+XEQUES differs fundamentally from:
+
+- **Blockchains** — which finalize ordering, not execution
+- **PKI** — which authenticates identity, not behavior
+- **BFT systems** — which require online consensus
+
+XEQUES introduces execution finality as a first-class primitive.
+
+---
+
