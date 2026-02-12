@@ -246,3 +246,33 @@ This work makes the following contributions:
 Traditional PKI systems authenticate command origin but do not attest to execution. Blockchain-based systems provide ordering and consensus but are ill-suited for high-latency or disconnected environments. Secure logging and attestation systems partially address execution integrity but typically require trusted hardware assumptions.
 
 XEQUES differs by treating execution receipts as a Layer-1 primitive, independent of consensus, enabling verification under post-quantum threat models and long-lived device constraints.
+
+\section{Threat Model}
+
+We assume an adversary with full network visibility and control, capable of replaying, delaying, reordering, or suppressing messages. The adversary may compromise command authorities and obtain their private keys. The adversary may possess quantum computational capabilities sufficient to break classical cryptographic schemes.
+
+We assume devices protect their private keys from extraction. Physical compromise of a device constitutes total device compromise and is outside the protocol scope.
+
+\section{Security Guarantees}
+
+\subsection{Theorem 1 (Execution Authenticity)}
+
+\textbf{Statement.} Any valid execution receipt must correspond to an actual execution of the associated command on the device.
+
+\textbf{Proof Sketch.} A receipt is generated only after evaluating the deterministic execution function $\delta$. Producing a valid receipt without execution requires forging a post-quantum signature under the device key, contradicting signature unforgeability.
+
+\subsection{Theorem 2 (Authority Independence)}
+
+\textbf{Statement.} Verification of execution receipts does not require trust in the command authority.
+
+\textbf{Proof Sketch.} Receipt verification depends solely on the device public key and the receipt contents. Even if the authority is malicious or compromised, it cannot produce execution receipts without device participation.
+
+\subsection{Theorem 3 (Replay Resistance)}
+
+\textbf{Statement.} XEQUES prevents replayed commands from producing valid execution receipts.
+
+\textbf{Proof Sketch.} Receipts bind monotonically increasing sequence numbers and prior state hashes. Replayed commands violate sequence or state consistency and are rejected by the device.
+
+\subsection{Corollary (Offline Verifiability)}
+
+Execution receipts may be verified offline without interaction with the device or authority, provided the verifier possesses the device public key.
