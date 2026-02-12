@@ -422,3 +422,44 @@ XEQUES guarantees the following:
 \end{quote}
 
 The converse is intentionally not guaranteed.
+
+\section{Formal Invariants}
+
+XEQUES maintains the following protocol invariants:
+
+\begin{itemize}
+\item \textbf{Execution Soundness:} A valid receipt implies real execution.
+\item \textbf{Non-Repudiation:} Devices cannot deny executed commands.
+\item \textbf{Non-Fabrication:} Receipts cannot be produced without execution.
+\item \textbf{Offline Verifiability:} Verification does not require network access.
+\item \textbf{Monotonic Progress:} Sequence numbers strictly increase per device.
+\end{itemize}
+
+These invariants hold assuming post-quantum signature unforgeability.
+
+\section{Related Work}
+
+Traditional blockchains provide ordering and consensus but do not prove execution.
+
+Public Key Infrastructure (PKI) authenticates identities but not actions.
+
+Trusted Execution Environments (TEEs) rely on hardware trust assumptions.
+
+XEQUES differs by treating \emph{execution receipts} as a Layer-1 primitive,
+independent of ordering, consensus, or trusted hardware.
+
+\section{Conclusion}
+
+XEQUES introduces Proof-of-Command-Correctness (PoCC),
+a new Layer-1 trust primitive for autonomous systems.
+
+By elevating execution receipts to first-class cryptographic objects,
+XEQUES enables offline, post-quantum verifiable command finality.
+
+This work opens a new design space for secure control of
+long-lived, safety-critical infrastructure.
+
+\section*{arXiv Submission Note}
+
+This document is intended for public dissemination via arXiv
+under the Cryptography and Security (cs.CR) category.
