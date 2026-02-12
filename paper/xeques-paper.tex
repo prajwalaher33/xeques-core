@@ -220,3 +220,29 @@ Any implementation conforming to this specification guarantees:
 \item Replay and reordering resistance
 \item Post-quantum security assumptions
 \end{itemize}
+
+\section{Abstract}
+
+Autonomous infrastructure systems rely on cryptographic authorization to accept commands, but existing systems authenticate intent rather than execution. We introduce \emph{XEQUES}, a Layer-1 protocol that formalizes \emph{Proof-of-Command-Correctness (PoCC)}: cryptographically verifiable execution receipts emitted by devices after executing authorized commands. XEQUES enables post-quantum secure, offline-verifiable execution finality for long-lived autonomous systems such as satellites, power grids, and industrial robotics. Unlike blockchains or traditional PKI, XEQUES treats execution itself as the unit of trust.
+
+\section{Introduction}
+
+Modern autonomous systems operate under delayed connectivity, adversarial environments, and long operational lifetimes. While cryptographic signatures authenticate command authorization, they do not prove that a command was actually executed. This gap becomes critical in safety- and mission-critical systems.
+
+XEQUES addresses this gap by introducing execution receipts as a first-class trust primitive. Devices emit cryptographically signed receipts only after executing verified commands, allowing third parties to independently validate execution correctness without trusting the issuing authority.
+
+\section{Contributions}
+
+This work makes the following contributions:
+\begin{itemize}
+\item A new Layer-1 trust primitive: Proof-of-Command-Correctness (PoCC).
+\item A formal execution and receipt model for autonomous devices.
+\item A post-quantum secure protocol design supporting offline verification.
+\item A reference implementation demonstrating feasibility.
+\end{itemize}
+
+\section{Related Work}
+
+Traditional PKI systems authenticate command origin but do not attest to execution. Blockchain-based systems provide ordering and consensus but are ill-suited for high-latency or disconnected environments. Secure logging and attestation systems partially address execution integrity but typically require trusted hardware assumptions.
+
+XEQUES differs by treating execution receipts as a Layer-1 primitive, independent of consensus, enabling verification under post-quantum threat models and long-lived device constraints.
