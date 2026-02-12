@@ -2,3 +2,7 @@
 keys/
 *.backup
 Cargo.lock
+# XEQUES publish ignores
+backup_*
+publish_clean/target/
+chatgpt_backups*

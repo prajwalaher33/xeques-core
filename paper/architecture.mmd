@@ -1,0 +1,5 @@
+﻿graph TD
+    A[Authority] -->|PQ Signed Command| B[Device]
+    B -->|Execute| C[Physical Action]
+    B -->|Signed Receipt| D[Receipt Log]
+    D -->|Verify| E[Auditor / Registry]
