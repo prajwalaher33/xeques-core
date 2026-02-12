@@ -65,3 +65,50 @@ Future work includes formal proofs and deployment profiles.
 
 \bibliographystyle{plain}
 \end{document}
+
+\section{Execution Invariant}
+
+XEQUES enforces the following invariant:
+
+\begin{quote}
+\textit{No valid execution receipt can exist without the corresponding command having been executed by the device.}
+\end{quote}
+
+This invariant binds cryptographic evidence to physical or autonomous execution.
+
+\section{Comparative Analysis}
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{System} & \textbf{Auth} & \textbf{Order} & \textbf{Execution Proof} & \textbf{Offline Verifiable} \\
+\hline
+PKI & \checkmark & \times & \times & \checkmark \\
+Blockchain & \checkmark & \checkmark & \times & \checkmark \\
+Audit Logs & \times & \times & \times & \checkmark \\
+MPC / TEE & \checkmark & \times & \textasciitilde & \times \\
+\textbf{XEQUES} & \checkmark & \times & \checkmark & \checkmark \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Impossibility of Execution Proof in Existing Systems}
+
+Blockchains can attest to transaction ordering but cannot prove
+that a command resulted in physical or autonomous execution.
+
+PKI authenticates senders but is agnostic to outcomes.
+
+Trusted execution environments shift trust assumptions and are
+not offline-verifiable nor post-quantum secure.
+
+Therefore, execution finality is unachievable in these systems
+without introducing device-signed execution receipts, as done
+by XEQUES.
+
+\section{Interpretation}
+
+XEQUES introduces a third axis of trust beyond authorization and
+ordering: \textbf{execution}. This axis is orthogonal to existing
+distributed systems paradigms.
+
