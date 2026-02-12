@@ -463,3 +463,48 @@ long-lived, safety-critical infrastructure.
 
 This document is intended for public dissemination via arXiv
 under the Cryptography and Security (cs.CR) category.
+\section{Security Considerations}
+
+XEQUES shifts the unit of trust from authorization to execution.
+This section clarifies failure modes and residual risks.
+
+\subsection{Key Compromise}
+
+If a device private key is compromised, an adversary may forge
+execution receipts. This is equivalent to full device compromise
+and is considered outside the protocol threat model.
+
+Key rotation and hardware-backed key storage are RECOMMENDED.
+
+\subsection{Authority Compromise}
+
+If an authority key is compromised, adversaries may issue
+unauthorized commands. However, execution receipts remain
+verifiable and auditable post-facto.
+
+XEQUES separates command issuance from execution finality.
+
+\subsection{Replay and Reordering Attacks}
+
+Commands are bound to monotonic sequence numbers.
+Devices MUST reject commands with stale or repeated sequence
+values.
+
+\subsection{Quantum Adversaries}
+
+XEQUES assumes post-quantum secure signature schemes.
+If these primitives fail, the protocol offers no additional
+cryptographic fallback.
+
+\subsection{Non-Goals}
+
+XEQUES does not provide:
+\begin{itemize}
+\item Byzantine fault tolerance
+\item Global consensus
+\item Transaction ordering
+\item Economic incentives
+\end{itemize}
+
+These properties are intentionally excluded to minimize
+the trusted computing base.
