@@ -310,3 +310,33 @@ For a given device and sequence number, at most one valid receipt may exist.
 A device may safely restart by persisting only its last accepted receipt. All prior state may be reconstructed or verified from the receipt log.
 
 \textbf{Implication.} XEQUES supports long-lived, intermittently powered devices.
+
+\section{Comparison to Existing Systems}
+
+XEQUES addresses a trust gap not covered by blockchains, PKI, or secure logging systems.
+
+\subsection{Public-Key Infrastructure (PKI)}
+
+PKI proves \emph{who} issued a command but provides no cryptographic proof that a command was executed. Authorization and execution are decoupled.
+
+\textbf{Limitation.} A valid signature does not imply that the device acted.
+
+\subsection{Blockchains and Distributed Ledgers}
+
+Blockchains provide globally ordered logs and economic finality. However, they do not observe or verify real-world execution.
+
+\textbf{Limitation.} Blockchains finalize \emph{statements}, not physical actions.
+
+\subsection{Secure Audit Logs}
+
+Secure logs attest that a system recorded an event, but the log itself is not cryptographically bound to physical execution.
+
+\textbf{Limitation.} Logs can be written without execution unless the device is trusted.
+
+\subsection{XEQUES Distinction}
+
+XEQUES collapses authorization, execution, and attestation into a single cryptographic act.
+
+Execution receipts are produced \emph{iff} execution occurs, making forgery equivalent to device compromise.
+
+\textbf{Result.} XEQUES introduces execution-finality as a Layer-1 trust primitive.
