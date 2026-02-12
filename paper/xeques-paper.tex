@@ -1,115 +1,48 @@
-﻿\documentclass[11pt]{article}
+﻿\section{Execution Semantics}
 
-\usepackage{times}
-\usepackage{hyperref}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{geometry}
-\geometry{margin=1in}
+Let the device be modeled as a deterministic state machine:
 
-\title{XEQUES: Proof-of-Command-Correctness for\\
-Post-Quantum Autonomous Infrastructure}
+\[
+D = (S, C, E, \delta)
+\]
 
-\author{Prajwal Aher}
+where:
+\begin{itemize}
+\item \\$ is the set of internal device states
+\item \\$ is the set of valid commands
+\item \\$ is the set of execution effects
+\item \$\delta : S \times C \rightarrow S \times E\$ is the execution function
+\end{itemize}
 
-\date{}
+\subsection{Execution Rule}
 
-\begin{document}
-\maketitle
+Given a command \ \in C\$ and state \ \in S\$, execution produces:
 
-\begin{abstract}
-We introduce XEQUES, a Layer-1 trust protocol based on
-\emph{Proof-of-Command-Correctness (PoCC)}.
-Unlike blockchains that finalize ordering, XEQUES finalizes
-\emph{execution} by requiring autonomous devices to emit
-cryptographically verifiable execution receipts.
-The protocol is designed for post-quantum security,
-offline verification, and long-lived autonomous systems.
-\end{abstract}
+\[
+(s', e) = \delta(s, c)
+\]
 
-\section{Introduction}
-Modern autonomous infrastructure relies on cryptographic
-authorization of commands but lacks cryptographic proof
-that commands were actually executed.
-XEQUES addresses this gap by making execution itself
-a verifiable primitive.
+A receipt is generated if and only if execution occurs.
 
-\section{Threat Model}
-We assume adversaries with full network visibility,
-message replay capability, and access to quantum computation.
-Adversaries may compromise authorities but cannot forge
-device execution receipts.
+\subsection{Receipt Definition}
 
-\section{Cryptographic Foundations}
-XEQUES relies on post-quantum digital signatures,
-collision-resistant hashing, and monotonic sequencing.
-Devices possess long-lived post-quantum identities.
+A receipt is defined as:
 
-\section{Protocol Flow}
-Commands are authorized, executed, and finalized
-only when a device emits a signed execution receipt.
-No global consensus participation is required.
+\[
+r = \text{Sign}_{sk_D}(H(c \parallel s \parallel s' \parallel e))
+\]
 
-\section{Formal Invariants}
-XEQUES enforces execution authenticity, non-repudiation,
-immutability of receipts, and offline verifiability.
+\subsection{Receipt Validity}
 
-\section{Security Discussion}
-We discuss replay resistance, authority compromise,
-and long-term cryptographic robustness.
+A receipt \\$ is valid if:
+\begin{itemize}
+\item The signature verifies under \\$
+\item The hash binds execution inputs and outputs
+\item The state transition is valid
+\end{itemize}
 
-\section{Conclusion}
-XEQUES defines a new trust primitive for autonomous systems:
-cryptographically verifiable execution.
-Future work includes formal proofs and deployment profiles.
+\subsection{Safety Lemma}
 
-\bibliographystyle{plain}
-\end{document}
+Receipt forgery without execution implies compromise of the device secret key.
 
-\section{Execution Invariant}
-
-XEQUES enforces the following invariant:
-
-\begin{quote}
-\textit{No valid execution receipt can exist without the corresponding command having been executed by the device.}
-\end{quote}
-
-This invariant binds cryptographic evidence to physical or autonomous execution.
-
-\section{Comparative Analysis}
-
-\begin{center}
-\begin{tabular}{|l|c|c|c|c|}
-\hline
-\textbf{System} & \textbf{Auth} & \textbf{Order} & \textbf{Execution Proof} & \textbf{Offline Verifiable} \\
-\hline
-PKI & \checkmark & \times & \times & \checkmark \\
-Blockchain & \checkmark & \checkmark & \times & \checkmark \\
-Audit Logs & \times & \times & \times & \checkmark \\
-MPC / TEE & \checkmark & \times & \textasciitilde & \times \\
-\textbf{XEQUES} & \checkmark & \times & \checkmark & \checkmark \\
-\hline
-\end{tabular}
-\end{center}
-
-\section{Impossibility of Execution Proof in Existing Systems}
-
-Blockchains can attest to transaction ordering but cannot prove
-that a command resulted in physical or autonomous execution.
-
-PKI authenticates senders but is agnostic to outcomes.
-
-Trusted execution environments shift trust assumptions and are
-not offline-verifiable nor post-quantum secure.
-
-Therefore, execution finality is unachievable in these systems
-without introducing device-signed execution receipts, as done
-by XEQUES.
-
-\section{Interpretation}
-
-XEQUES introduces a third axis of trust beyond authorization and
-ordering: \textbf{execution}. This axis is orthogonal to existing
-distributed systems paradigms.
-
-...
+\textbf{Therefore, receipt forgery is equivalent to device compromise.}
