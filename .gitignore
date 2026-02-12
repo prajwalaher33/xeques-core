@@ -1,0 +1,8 @@
+﻿# XEQUES
+target/
+keys/
+backup_*
+chatgpt_backups*
+.env
+node_modules/
+.vscode/
