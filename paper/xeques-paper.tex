@@ -79,3 +79,44 @@ XEQUES assumes a powerful adversary with extensive network and cryptographic cap
 \subsection{Security Objective}
 XEQUES guarantees that any accepted receipt corresponds to a real execution
 of an authorized command, even under quantum-capable adversaries.
+
+\section{Cryptographic Foundations}
+
+XEQUES relies on standard cryptographic primitives with
+post-quantum security guarantees.
+
+\subsection{Digital Signatures}
+Each authority and device possesses a long-term post-quantum
+signature keypair.
+
+The signature scheme MUST provide:
+\begin{itemize}
+\item Existential unforgeability under chosen-message attacks (EUF-CMA)
+\item Security against quantum adversaries
+\item Deterministic or strongly bound randomized signing
+\end{itemize}
+
+Concrete instantiations include Dilithium or equivalent NIST PQC finalists.
+
+\subsection{Hash Functions}
+All receipts bind execution data using a collision-resistant hash function.
+
+The hash function MUST provide:
+\begin{itemize}
+\item Collision resistance
+\item Preimage resistance
+\item Second-preimage resistance
+\end{itemize}
+
+Standard SHA-2 or SHA-3 family functions are sufficient.
+
+\subsection{No Trusted Randomness Assumption}
+XEQUES does not require trusted randomness during verification.
+All security properties remain verifiable offline.
+
+\subsection{Cryptographic Trust Boundary}
+If a valid receipt verifies under a device public key,
+the protocol treats the corresponding execution as final.
+
+Breaking this guarantee implies a break of the underlying
+post-quantum signature scheme.
