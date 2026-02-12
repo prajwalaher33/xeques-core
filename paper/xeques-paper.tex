@@ -46,3 +46,49 @@ A receipt \\$ is valid if:
 Receipt forgery without execution implies compromise of the device secret key.
 
 \textbf{Therefore, receipt forgery is equivalent to device compromise.}
+
+\section{Receipt Chains and Temporal Ordering}
+
+XEQUES defines time implicitly through execution.
+
+Each execution receipt commits to the hash of the previous receipt,
+forming a cryptographic chain:
+
+\[
+r_i = \text{Sign}_{sk_D}(H(c_i \parallel s_i \parallel s_{i+1} \parallel r_{i-1}))
+\]
+
+where {i-1}$ is the hash of the previous receipt.
+
+\subsection{Receipt Chain Properties}
+
+\begin{itemize}
+\item \textbf{Total order}: receipts are linearly ordered per device
+\item \textbf{Immutability}: modifying a receipt breaks all successors
+\item \textbf{Offline verifiability}: no network required for audit
+\end{itemize}
+
+\subsection{Temporal Semantics}
+
+Time in XEQUES is defined by execution order, not wall-clock time.
+
+If receipt $ references {i-1}$, then execution $ occurred after execution -1$.
+
+This provides causal ordering without synchronized clocks.
+
+\subsection{Auditability}
+
+An auditor verifying a receipt chain checks:
+
+\begin{itemize}
+\item Signature validity of each receipt
+\item Hash linkage between receipts
+\item Monotonic command sequencing
+\end{itemize}
+
+\subsection{Security Implication}
+
+Any attempt to remove, reorder, or insert executions requires forging
+post-quantum signatures or breaking hash collision resistance.
+
+\textbf{Therefore, execution history is tamper-evident and final.}
