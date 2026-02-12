@@ -26,3 +26,25 @@ Receipts bind command, state transition, and execution effects.
 Receipt forgery implies compromise of the device private key.
 
 \end{document}
+
+\section{Formal Invariants}
+
+\subsection{Invariant 1: Execution Authenticity}
+
+\textbf{Implication:} A valid receipt cannot be produced without execution.
+
+\subsection{Invariant 2: Non-Equivocation}
+A device MUST NOT produce two distinct receipts for the same
+command sequence number that imply different execution effects.
+
+\textbf{Implication:} Conflicting histories are cryptographically detectable.
+
+\subsection{Invariant 3: Causal Ordering}
+Receipts encode a monotonic state transition.
+
+\subsection{Invariant 4: Offline Verifiability}
+Receipt verification requires only public data:
+the command, the receipt, and the device public key.
+
+\textbf{Implication:} Auditors can verify execution correctness
+without device access or network connectivity.
