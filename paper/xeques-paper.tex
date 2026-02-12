@@ -508,3 +508,41 @@ XEQUES does not provide:
 
 These properties are intentionally excluded to minimize
 the trusted computing base.
+% ================================
+% XEQUES — Formal Layer-1 Sections
+% ================================
+
+\section{Execution Semantics}
+
+We model the device as a deterministic state machine:
+
+\[
+D = (S, C, E, \delta)
+\]
+
+where \( S \) is device state, \( C \) commands, and \( \delta \) execution.
+
+A receipt is produced if and only if execution occurs.
+
+\section{Correctness Theorem}
+
+\textbf{Theorem.}
+A receipt verifies under device public key \( pk_D \)
+if and only if the device executed the command.
+
+\textbf{Proof Sketch.}
+Receipt signatures are unforgeable.
+Hashes bind command, state, and effects.
+Thus forging a receipt implies device key compromise.
+
+\section{Protocol Flow}
+
+\begin{enumerate}
+\item Authority signs command using PQ signature
+\item Device verifies signature and sequence
+\item Device executes command
+\item Device emits signed execution receipt
+\item Any verifier validates receipt offline
+\end{enumerate}
+
+% ================================
