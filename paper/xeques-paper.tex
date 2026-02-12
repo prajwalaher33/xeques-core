@@ -48,3 +48,34 @@ the command, the receipt, and the device public key.
 
 \textbf{Implication:} Auditors can verify execution correctness
 without device access or network connectivity.
+
+\section{Threat Model}
+
+XEQUES assumes a powerful adversary with extensive network and cryptographic capabilities.
+
+\subsection{Adversary Capabilities}
+\begin{itemize}
+\item Full network observation, delay, replay, and reordering
+\item Compromise of command authorities
+\item Physical capture of devices (excluding private key extraction)
+\item Long-term quantum computational capability
+\item Access to all published receipts and logs
+\end{itemize}
+
+\subsection{Adversary Limitations}
+\begin{itemize}
+\item Cannot forge post-quantum digital signatures
+\item Cannot extract private keys from uncompromised devices
+\item Cannot alter device execution semantics without detection
+\end{itemize}
+
+\subsection{Out-of-Scope Attacks}
+\begin{itemize}
+\item Side-channel extraction of device private keys
+\item Malicious firmware replacing execution logic
+\item Denial-of-service attacks
+\end{itemize}
+
+\subsection{Security Objective}
+XEQUES guarantees that any accepted receipt corresponds to a real execution
+of an authorized command, even under quantum-capable adversaries.
