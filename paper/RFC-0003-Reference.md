@@ -1,18 +1,13 @@
 ﻿# XEQUES RFC-0003
-## Reference Execution Specification
-
-**Layer:** 1  
-**Status:** Draft  
-**Author:** Prajwal Aher  
+## Reference Execution Semantics
 
 ---
 
-## 1. State Machine
+## 1. Required State
 
-Each device maintains:
-
-- DeviceID
-- Sequence counter
+Each device MUST maintain:
+- Device identifier
+- Monotonic sequence counter
 - Execution log
 
 ---
@@ -22,9 +17,9 @@ Each device maintains:
 
 ---
 
-## 3. Determinism Requirement
+## 3. Determinism
 
-For identical inputs, execution MUST produce identical receipts.
+Identical inputs MUST produce identical receipts.
 
 ---
 
@@ -32,11 +27,3 @@ For identical inputs, execution MUST produce identical receipts.
 
 If execution fails:
 - No receipt MUST be emitted
-- Failure MAY be logged locally
-
----
-
-## 5. Compliance
-
-Any implementation following this spec
-is considered XEQUES-compatible.

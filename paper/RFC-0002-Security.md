@@ -1,77 +1,44 @@
 ﻿# XEQUES RFC-0002
-## Security Properties of Proof-of-Command-Correctness (PoCC)
+## Security Model and Properties
 
 **Layer:** 1  
 **Status:** Draft  
-**Author:** Prajwal Aher  
-**Year:** 2026  
 
 ---
 
-## 1. Security Model
+## 1. Adversary Model
 
-XEQUES operates under the following assumptions:
+An adversary MAY:
+- Observe all network traffic
+- Replay or reorder commands
+- Compromise command authorities
+- Possess quantum computational capability
 
-- Adversary controls the network
-- Adversary may compromise authorities
-- Adversary may possess quantum computational power
-- Devices are tamper-resistant post-deployment
+An adversary MUST NOT:
+- Forge device execution receipts
+- Produce receipts without execution
 
 ---
 
 ## 2. Security Properties
 
-### 2.1 Unforgeability of Execution
+### SP-1: Execution Unforgeability
+No valid receipt can exist without execution.
 
-**Property:**  
-No adversary can produce a valid execution receipt without executing the command.
+### SP-2: Authorization ≠ Execution
+Authorization alone has no finality.
 
-**Rationale:**  
-Receipts are generated *after* execution and signed by device-bound keys.
+### SP-3: Replay Resistance
+Receipts MUST bind monotonic sequence numbers.
 
----
+### SP-4: Offline Verifiability
+Verification MUST require no network access.
 
-### 2.2 Authorization-Execution Separation
-
-**Property:**  
-Authorization does not imply execution.
-
-**Guarantee:**  
-Only receipts finalize state transitions.
+### SP-5: Post-Quantum Safety
+All signatures MUST be PQ-secure.
 
 ---
 
-### 2.3 Post-Quantum Safety
+## 3. Trust Shift
 
-**Property:**  
-All cryptographic primitives are quantum-resistant.
-
----
-
-### 2.4 Replay Resistance
-
-**Property:**  
-Receipts bind monotonic sequence numbers.
-
----
-
-### 2.5 Offline Verifiability
-
-**Property:**  
-Verification requires no network access or consensus state.
-
----
-
-## 3. Trust Boundary Shift
-
-XEQUES relocates trust from:
-> Controllers → Verifiable device behavior
-
-This is the core security innovation.
-
----
-
-## 4. Summary
-
-XEQUES provides execution-finality guarantees
-not achievable with traditional command-auth systems.
+XEQUES relocates trust from controllers to devices.
