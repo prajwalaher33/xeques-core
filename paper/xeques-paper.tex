@@ -340,3 +340,43 @@ XEQUES collapses authorization, execution, and attestation into a single cryptog
 Execution receipts are produced \emph{iff} execution occurs, making forgery equivalent to device compromise.
 
 \textbf{Result.} XEQUES introduces execution-finality as a Layer-1 trust primitive.
+
+\section{Limitations and Non-Goals}
+
+XEQUES is intentionally minimal. This section clarifies what the protocol does not attempt to solve.
+
+\subsection{No Global Consensus}
+
+XEQUES does not provide ordering, leader election, or consensus among devices.
+
+Receipt validity is independent of global agreement and can be verified offline.
+
+\subsection{No Economic Security Model}
+
+XEQUES does not rely on staking, slashing, or incentives. Its security rests solely on cryptographic unforgeability and device key integrity.
+
+\subsection{No Execution Enforcement}
+
+XEQUES cannot prevent a compromised device from refusing to execute a command.
+
+However, it prevents a device from falsely claiming execution without cryptographic evidence.
+
+\subsection{Physical World Assumptions}
+
+XEQUES assumes that device execution faithfully reflects physical action.
+
+Sensor spoofing, actuator sabotage, and hardware faults are explicitly out of scope.
+
+\subsection{Key Compromise}
+
+If a device private key is compromised, an attacker may generate valid receipts.
+
+Key rotation, revocation, and registry governance are left to higher layers.
+
+\subsection{Intentional Minimalism}
+
+XEQUES defines a single primitive: execution-finality.
+
+All networking, aggregation, storage, and governance layers are optional extensions.
+
+\textbf{Design principle:} A protocol that does less, but proves more.
