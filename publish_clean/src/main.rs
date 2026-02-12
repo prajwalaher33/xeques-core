@@ -7,10 +7,7 @@ struct Command {
 }
 
 fn main() {
-    let cmd = Command {
-        device: "sim-01",
-        action: "SetMode:Idle",
-    };
+    let cmd = Command { device: "sim-01", action: "SetMode:Idle" };
     println!("Command Verified: true");
     println!("{}", serde_json::to_string(&cmd).unwrap());
 }
