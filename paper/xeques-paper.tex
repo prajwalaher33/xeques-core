@@ -1,0 +1,67 @@
+﻿\documentclass[11pt]{article}
+
+\usepackage{times}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{XEQUES: Proof-of-Command-Correctness for\\
+Post-Quantum Autonomous Infrastructure}
+
+\author{Prajwal Aher}
+
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We introduce XEQUES, a Layer-1 trust protocol based on
+\emph{Proof-of-Command-Correctness (PoCC)}.
+Unlike blockchains that finalize ordering, XEQUES finalizes
+\emph{execution} by requiring autonomous devices to emit
+cryptographically verifiable execution receipts.
+The protocol is designed for post-quantum security,
+offline verification, and long-lived autonomous systems.
+\end{abstract}
+
+\section{Introduction}
+Modern autonomous infrastructure relies on cryptographic
+authorization of commands but lacks cryptographic proof
+that commands were actually executed.
+XEQUES addresses this gap by making execution itself
+a verifiable primitive.
+
+\section{Threat Model}
+We assume adversaries with full network visibility,
+message replay capability, and access to quantum computation.
+Adversaries may compromise authorities but cannot forge
+device execution receipts.
+
+\section{Cryptographic Foundations}
+XEQUES relies on post-quantum digital signatures,
+collision-resistant hashing, and monotonic sequencing.
+Devices possess long-lived post-quantum identities.
+
+\section{Protocol Flow}
+Commands are authorized, executed, and finalized
+only when a device emits a signed execution receipt.
+No global consensus participation is required.
+
+\section{Formal Invariants}
+XEQUES enforces execution authenticity, non-repudiation,
+immutability of receipts, and offline verifiability.
+
+\section{Security Discussion}
+We discuss replay resistance, authority compromise,
+and long-term cryptographic robustness.
+
+\section{Conclusion}
+XEQUES defines a new trust primitive for autonomous systems:
+cryptographically verifiable execution.
+Future work includes formal proofs and deployment profiles.
+
+\bibliographystyle{plain}
+\end{document}
