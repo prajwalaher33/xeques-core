@@ -380,3 +380,45 @@ XEQUES defines a single primitive: execution-finality.
 All networking, aggregation, storage, and governance layers are optional extensions.
 
 \textbf{Design principle:} A protocol that does less, but proves more.
+
+\section{Liveness and Availability}
+
+XEQUES distinguishes between \emph{execution liveness} and \emph{receipt availability}.
+
+\subsection{Execution Liveness}
+
+XEQUES does not guarantee that a device will execute a valid command.
+
+Devices may be offline, partitioned, damaged, or policy-restricted.
+
+Failure to produce a receipt is treated as non-execution rather than protocol failure.
+
+\subsection{Receipt Availability}
+
+Receipt availability is orthogonal to execution.
+
+Receipts may be delayed, buffered, or transmitted asynchronously without affecting validity.
+
+Verification does not require real-time connectivity to the issuing authority.
+
+\subsection{Offline and Partitioned Operation}
+
+XEQUES explicitly supports disconnected operation.
+
+Receipts remain verifiable indefinitely once obtained.
+
+\subsection{Replay and Suppression}
+
+Command replay is prevented through monotonic sequencing bound into receipts.
+
+Receipt suppression is detectable through missing sequence numbers.
+
+\subsection{Liveness Safety Property}
+
+XEQUES guarantees the following:
+
+\begin{quote}
+\textbf{If a valid receipt exists, then the corresponding execution occurred.}
+\end{quote}
+
+The converse is intentionally not guaranteed.
