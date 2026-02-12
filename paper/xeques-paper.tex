@@ -179,3 +179,44 @@ Any third party can verify execution correctness without contacting the device.
 
 \subsection{Invariant 5: Execution Finality}
 Once a receipt verifies, execution is final and irreversible.
+
+\section{Normative Protocol Requirements}
+
+The following requirements use the terminology defined in RFC 2119.
+
+\subsection{Authority Requirements}
+\begin{itemize}
+\item Authorities \textbf{MUST} sign every command using a post-quantum secure signature scheme.
+\item Authorities \textbf{MUST} include a monotonically increasing sequence number per device.
+\item Authorities \textbf{MUST NOT} reuse sequence numbers for the same device.
+\end{itemize}
+
+\subsection{Device Requirements}
+\begin{itemize}
+\item Devices \textbf{MUST} verify authority signatures before execution.
+\item Devices \textbf{MUST} reject commands with stale or non-monotonic sequence numbers.
+\item Devices \textbf{MUST} emit exactly one receipt per executed command.
+\item Devices \textbf{MUST NOT} emit receipts without executing the command.
+\end{itemize}
+
+\subsection{Receipt Requirements}
+\begin{itemize}
+\item Receipts \textbf{MUST} cryptographically bind the command, pre-state, post-state, and execution effect.
+\item Receipts \textbf{MUST} be signed with a device-unique private key.
+\item Receipts \textbf{SHOULD} be verifiable offline by third parties.
+\end{itemize}
+
+\subsection{Verifier Requirements}
+\begin{itemize}
+\item Verifiers \textbf{MUST} validate receipt signatures before accepting execution correctness.
+\item Verifiers \textbf{MUST NOT} trust execution claims without a valid receipt.
+\end{itemize}
+
+\subsection{Security Guarantees}
+Any implementation conforming to this specification guarantees:
+\begin{itemize}
+\item Execution authenticity
+\item Non-repudiation of device actions
+\item Replay and reordering resistance
+\item Post-quantum security assumptions
+\end{itemize}
