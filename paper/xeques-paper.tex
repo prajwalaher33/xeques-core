@@ -1,94 +1,28 @@
-﻿\section{Execution Semantics}
+\documentclass[11pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
 
-Let the device be modeled as a deterministic state machine:
+\title{XEQUES: Proof-of-Command-Correctness}
+\author{Prajwal Aher}
+\date{\today}
 
-\[
-D = (S, C, E, \delta)
-\]
+\begin{document}
+\maketitle
 
-where:
-\begin{itemize}
-\item \\$ is the set of internal device states
-\item \\$ is the set of valid commands
-\item \\$ is the set of execution effects
-\item \$\delta : S \times C \rightarrow S \times E\$ is the execution function
-\end{itemize}
+\begin{abstract}
+XEQUES introduces Proof-of-Command-Correctness (PoCC), a Layer-1
+trust primitive where autonomous devices emit cryptographically
+verifiable execution receipts after executing authorized commands.
+\end{abstract}
 
-\subsection{Execution Rule}
+\section{Execution Semantics}
+Devices are modeled as deterministic state machines.
 
-Given a command \ \in C\$ and state \ \in S\$, execution produces:
+\section{Receipt Definition}
+Receipts bind command, state transition, and execution effects.
 
-\[
-(s', e) = \delta(s, c)
-\]
+\section{Safety Lemma}
+Receipt forgery implies compromise of the device private key.
 
-A receipt is generated if and only if execution occurs.
-
-\subsection{Receipt Definition}
-
-A receipt is defined as:
-
-\[
-r = \text{Sign}_{sk_D}(H(c \parallel s \parallel s' \parallel e))
-\]
-
-\subsection{Receipt Validity}
-
-A receipt \\$ is valid if:
-\begin{itemize}
-\item The signature verifies under \\$
-\item The hash binds execution inputs and outputs
-\item The state transition is valid
-\end{itemize}
-
-\subsection{Safety Lemma}
-
-Receipt forgery without execution implies compromise of the device secret key.
-
-\textbf{Therefore, receipt forgery is equivalent to device compromise.}
-
-\section{Receipt Chains and Temporal Ordering}
-
-XEQUES defines time implicitly through execution.
-
-Each execution receipt commits to the hash of the previous receipt,
-forming a cryptographic chain:
-
-\[
-r_i = \text{Sign}_{sk_D}(H(c_i \parallel s_i \parallel s_{i+1} \parallel r_{i-1}))
-\]
-
-where {i-1}$ is the hash of the previous receipt.
-
-\subsection{Receipt Chain Properties}
-
-\begin{itemize}
-\item \textbf{Total order}: receipts are linearly ordered per device
-\item \textbf{Immutability}: modifying a receipt breaks all successors
-\item \textbf{Offline verifiability}: no network required for audit
-\end{itemize}
-
-\subsection{Temporal Semantics}
-
-Time in XEQUES is defined by execution order, not wall-clock time.
-
-If receipt $ references {i-1}$, then execution $ occurred after execution -1$.
-
-This provides causal ordering without synchronized clocks.
-
-\subsection{Auditability}
-
-An auditor verifying a receipt chain checks:
-
-\begin{itemize}
-\item Signature validity of each receipt
-\item Hash linkage between receipts
-\item Monotonic command sequencing
-\end{itemize}
-
-\subsection{Security Implication}
-
-Any attempt to remove, reorder, or insert executions requires forging
-post-quantum signatures or breaking hash collision resistance.
-
-\textbf{Therefore, execution history is tamper-evident and final.}
+\end{document}
