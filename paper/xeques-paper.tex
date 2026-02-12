@@ -276,3 +276,37 @@ We assume devices protect their private keys from extraction. Physical compromis
 \subsection{Corollary (Offline Verifiability)}
 
 Execution receipts may be verified offline without interaction with the device or authority, provided the verifier possesses the device public key.
+
+\section{Protocol Invariants}
+
+XEQUES maintains a set of global invariants that hold for all valid executions and receipts.
+
+\subsection{Invariant 1 (Monotonic Execution)}
+
+
+\textbf{Implication.} Devices cannot skip, reorder, or retroactively insert executions.
+
+\subsection{Invariant 2 (State Continuity)}
+
+
+\textbf{Implication.} Forked or divergent execution histories are detectable and invalid.
+
+\subsection{Invariant 3 (Single-Receipt Finality)}
+
+For a given device and sequence number, at most one valid receipt may exist.
+
+\textbf{Implication.} Execution equivocation is cryptographically prevented.
+
+\section{State Safety}
+
+\subsection{Safety Theorem}
+
+\textbf{Statement.} No two conflicting execution histories for the same device can both be accepted by a correct verifier.
+
+\textbf{Proof Sketch.} Conflicting histories imply either duplicate sequence numbers or inconsistent state hashes. Both violate receipt validity conditions and are rejected.
+
+\subsection{Crash and Restart Safety}
+
+A device may safely restart by persisting only its last accepted receipt. All prior state may be reconstructed or verified from the receipt log.
+
+\textbf{Implication.} XEQUES supports long-lived, intermittently powered devices.
