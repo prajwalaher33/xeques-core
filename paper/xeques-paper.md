@@ -532,3 +532,63 @@ XEQUES introduces execution finality as a first-class primitive.
 
 ---
 
+---
+
+## 4. Threat Model
+
+XEQUES assumes a strong adversary with full network visibility,
+message replay capability, and long-term cryptanalytic resources,
+including access to quantum computation.
+
+The adversary may:
+- Replay, delay, or reorder commands
+- Compromise command authorities
+- Observe all traffic and stored logs
+
+The adversary **cannot**:
+- Forge post-quantum signatures without device secret keys
+- Produce a valid execution receipt without executing the command
+- Retroactively alter execution history
+
+---
+
+## 5. Cryptographic Foundations
+
+XEQUES relies on:
+- Post-quantum digital signatures (e.g., Dilithium)
+- Collision-resistant hash functions
+- Monotonic sequence enforcement
+
+Each execution receipt binds:
+
+(command_hash,
+ device_id,
+ sequence_number,
+ execution_result,
+ timestamp)
+
+This binding is signed by the device itself.
+
+---
+
+## 6. Protocol Flow
+
+1. Authority signs a command using PQ credentials
+2. Device verifies authorization and freshness
+3. Device executes the command
+4. Device emits a signed execution receipt (PoCC)
+5. Receipts are stored or transmitted for independent verification
+
+No consensus participation is required for correctness.
+
+---
+
+## 7. Formal Invariants
+
+XEQUES enforces the following invariants:
+
+- **Execution Authenticity**: Every receipt corresponds to a real execution
+- **Non-Repudiation**: Devices cannot deny executed commands
+- **Finality**: Receipts are immutable once emitted
+- **Offline Verifiability**: Auditors need no live device access
+
