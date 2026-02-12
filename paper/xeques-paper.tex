@@ -120,3 +120,62 @@ the protocol treats the corresponding execution as final.
 
 Breaking this guarantee implies a break of the underlying
 post-quantum signature scheme.
+
+\section{Protocol Flow}
+
+XEQUES defines a minimal two-phase protocol between an Authority and a Device.
+
+\subsection{Phase 1: Command Authorization}
+An authority constructs a command message:
+
+\[
+m = (cmd\_id, device\_id, payload, seq)
+\]
+
+The authority signs the command:
+
+\[
+\sigma_A = \text{Sign}_{sk_A}(H(m))
+\]
+
+
+\subsection{Phase 2: Execution and Receipt Emission}
+Upon receipt, the device verifies $\sigma_A$ and checks sequence monotonicity.
+
+If verification succeeds, the device executes the command:
+
+\[
+(s', e) = \delta(s, cmd)
+\]
+
+The device then constructs an execution receipt:
+
+\[
+r = (cmd\_id, device\_id, s, s', e, seq)
+\]
+
+and signs it:
+
+\[
+\sigma_D = \text{Sign}_{sk_D}(H(r))
+\]
+
+
+\section{Formal Invariants}
+
+\subsection{Invariant 1: Execution Authenticity}
+Every valid receipt corresponds to an actual device execution.
+
+\textbf{Justification:} Forging a receipt implies forging a post-quantum signature.
+
+\subsection{Invariant 2: Non-Repudiation}
+A device cannot deny executing a command once a valid receipt is published.
+
+\subsection{Invariant 3: Order Preservation}
+Monotonic sequence numbers prevent command replay and reordering.
+
+\subsection{Invariant 4: Offline Verifiability}
+Any third party can verify execution correctness without contacting the device.
+
+\subsection{Invariant 5: Execution Finality}
+Once a receipt verifies, execution is final and irreversible.
