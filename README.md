@@ -1,12 +1,12 @@
-﻿# XEQUES â€” Quantum-Resilient Command Finality Layer
+﻿# XEQUES  Quantum-Resilient Command Finality Layer
 
 XEQUES introduces Proof-of-Command-Correctness (PoCC):
 a Layer-1 protocol where execution itself becomes cryptographically verifiable.
 
 ## Structure
-- paper/ â€” RFCs and research
-- publish_clean/ â€” minimal demo
-- src/ â€” reference implementation
+- paper/  RFCs and research
+- publish_clean/  minimal demo
+- src/  reference implementation
 
 ## Demo
 cd publish_clean
