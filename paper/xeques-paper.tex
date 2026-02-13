@@ -953,3 +953,67 @@ breaking any invariant requires compromise of the device key.
 
 \textbf{Implication:}
 XEQUES execution finality survives cryptographic transitions.
+
+\section{Liveness and Failure Semantics}
+
+XEQUES is designed for autonomous systems operating under
+partial connectivity, delayed communication, and authority loss.
+
+\subsection{Liveness Model}
+
+A device is considered \emph{live} if it can:
+\begin{itemize}
+\item Verify incoming commands
+\item Execute commands locally
+\item Emit execution receipts
+\end{itemize}
+
+Network availability is \emph{not} required for liveness.
+
+\subsection{Authority Failure}
+
+If an authority becomes unavailable after issuing a command:
+\begin{itemize}
+\item Command execution remains valid
+\item Receipts remain verifiable
+\item No reauthorization is required
+\end{itemize}
+
+\textbf{Result:}
+XEQUES decouples execution finality from authority uptime.
+
+\subsection{Network Partitions}
+
+During network partitions:
+\begin{itemize}
+\item Devices continue execution independently
+\item Receipts are stored locally
+\item Verification is deferred but not invalidated
+\end{itemize}
+
+\textbf{Result:}
+XEQUES tolerates unbounded network delays.
+
+\subsection{Device Reboots and Power Loss}
+
+After reboot, a device resumes with:
+\begin{itemize}
+\item Persisted execution state
+\item Monotonic sequence counters
+\item Unbroken receipt chains
+\end{itemize}
+
+\textbf{Result:}
+Execution history remains intact across restarts.
+
+\subsection{Failure Safety Guarantee}
+
+No failure mode allows:
+\begin{itemize}
+\item Receipt creation without execution
+\item Undetectable command replay
+\item Retroactive state modification
+\end{itemize}
+
+\textbf{Conclusion:}
+XEQUES guarantees execution liveness without sacrificing safety.
