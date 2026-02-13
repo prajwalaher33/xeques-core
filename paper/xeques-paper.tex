@@ -1017,3 +1017,63 @@ No failure mode allows:
 
 \textbf{Conclusion:}
 XEQUES guarantees execution liveness without sacrificing safety.
+
+\section{Security Proof Sketch}
+
+This section outlines the security guarantees of XEQUES
+under standard cryptographic assumptions.
+
+\subsection{Security Objective}
+
+The primary security goal is:
+
+\begin{quote}
+It must be computationally infeasible to produce a valid
+execution receipt for a command that was not executed by the device.
+\end{quote}
+
+\subsection{Adversary Model}
+
+The adversary is assumed to have the ability to:
+\begin{itemize}
+\item Observe all network traffic
+\item Replay previously observed commands
+\item Compromise command authorities
+\item Perform adaptive chosen-message attacks
+\end{itemize}
+
+The adversary is not assumed to control the device private key.
+
+\subsection{Unforgeability Reduction}
+
+Assume an adversary $\mathcal{A}$ produces a valid receipt
+$ for a command $ that was not executed by device $.
+
+By construction, $ contains a signature:
+
+\[
+r = \text{Sign}_{sk_D}(H(c \parallel s \parallel s' \parallel e))
+\]
+
+If $\mathcal{A}$ did not execute $\delta(s, c)$ on $, then:
+\begin{itemize}
+\item Either $\mathcal{A}$ forged a signature under $, or
+\item $\mathcal{A}$ obtained $
+\end{itemize}
+
+\subsection{Security Theorem}
+
+\textbf{Theorem:}
+Under the assumption that the post-quantum signature scheme is
+existentially unforgeable under chosen-message attacks (EUF-CMA),
+no adversary can produce a valid XEQUES receipt without executing
+the corresponding command on the device.
+
+\subsection{Implication}
+
+Breaking XEQUES execution integrity implies breaking
+post-quantum signature unforgeability or device key isolation.
+
+\textbf{Therefore:}
+XEQUES reduces execution security directly to standard
+post-quantum cryptographic assumptions.
