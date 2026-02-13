@@ -1077,3 +1077,47 @@ post-quantum signature unforgeability or device key isolation.
 \textbf{Therefore:}
 XEQUES reduces execution security directly to standard
 post-quantum cryptographic assumptions.
+
+\section{Comparative Analysis}
+
+This section contrasts XEQUES with existing trust and verification systems.
+
+\subsection{Public Key Infrastructure (PKI)}
+
+PKI systems authenticate identities and authorize message origins.
+They do not provide cryptographic guarantees that a command was executed.
+
+XEQUES extends beyond authorization to cryptographically finalize execution.
+
+\subsection{Blockchains}
+
+Blockchains provide global ordering and consensus over state transitions.
+They do not verify that off-chain physical actions occurred as specified.
+
+XEQUES does not require consensus and does not order commands.
+It verifies execution directly at the device boundary.
+
+\subsection{Remote Attestation (TPM / TEE)}
+
+Remote attestation proves that a device is running approved software.
+It does not produce cryptographic evidence that a specific command was executed.
+
+XEQUES produces per-command execution receipts independent of runtime attestation.
+
+\subsection{Audit Logs}
+
+Traditional audit logs are mutable, centralized, or post-hoc.
+
+XEQUES receipts are cryptographically bound, device-signed, and
+independently verifiable without trusting the logging infrastructure.
+
+\subsection{Key Distinction}
+
+\begin{quote}
+XEQUES is the first system where \emph{execution itself} is the
+cryptographically finalized object.
+\end{quote}
+
+\textbf{Summary:}
+XEQUES introduces a new trust primitive orthogonal to identity,
+consensus, and attestation.
