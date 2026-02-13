@@ -907,3 +907,49 @@ XEQUES intentionally avoids:
 \end{itemize}
 
 The protocol security depends solely on device-held secret keys and correct execution.
+
+\section{Formal Invariants}
+
+This section defines the invariants guaranteed by XEQUES.
+These properties hold for all valid executions of the protocol.
+
+\subsection{Invariant I: Execution Authenticity}
+
+For any receipt $ verified under public key $,
+there exists a corresponding execution of command $
+by device $.
+
+\textbf{Implication:}
+No valid receipt can exist without real device execution.
+
+\subsection{Invariant II: Non-Repudiation}
+
+Once a receipt $ is produced by device $,
+the device cannot deny having executed command $.
+
+\textbf{Implication:}
+Execution accountability is cryptographically enforced.
+
+\subsection{Invariant III: Anti-Replay Safety}
+
+For any two receipts , r_j$ issued by device $,
+if .seq < r_j.seq$, then $ was executed before $.
+
+\textbf{Implication:}
+Command replays or reordering are detectable.
+
+\subsection{Invariant IV: Authority Independence}
+
+Receipt validity depends only on the device signature
+and not on authority availability after execution.
+
+\textbf{Implication:}
+Post-execution verification is offline and trust-minimized.
+
+\subsection{Invariant V: Quantum-Resilient Finality}
+
+Assuming post-quantum signature unforgeability,
+breaking any invariant requires compromise of the device key.
+
+\textbf{Implication:}
+XEQUES execution finality survives cryptographic transitions.
