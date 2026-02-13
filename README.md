@@ -5,8 +5,8 @@ a Layer-1 protocol where execution itself becomes cryptographically verifiable.
 
 ## Structure
 - paper/  RFCs and research
-- publish_clean/ â€” minimal demo
-- src/ â€” reference implementation
+- publish_clean/  minimal demo
+- src/  reference implementation
 
 ## Demo
 cd publish_clean
