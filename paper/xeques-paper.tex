@@ -546,3 +546,314 @@ Thus forging a receipt implies device key compromise.
 \end{enumerate}
 
 % ================================
+% ================================
+% XEQUES — Paper Structure
+% ================================
+
+\section{Abstract}
+(To be completed)
+
+\section{Introduction}
+(To be completed)
+
+\section{Related Work}
+(To be completed)
+
+\section{Threat Model}
+(To be completed)
+
+\section{Cryptographic Assumptions}
+(To be completed)
+
+\section{Security Invariants}
+(To be completed)
+
+\section{Conclusion}
+(To be completed)
+
+% ================================
+\section{Abstract}
+
+We introduce \textbf{XEQUES}, a Layer-1 protocol that formalizes
+\emph{execution itself} as a cryptographically verifiable primitive.
+Unlike blockchains, which establish consensus over ordering, or
+traditional PKI systems, which authenticate identity, XEQUES
+establishes \emph{execution finality} through device-emitted,
+post-quantum secure execution receipts.
+
+Each authorized command, once executed by an autonomous device,
+produces a signed receipt binding the command, pre-state, post-state,
+and execution effect. These receipts are independently verifiable,
+offline-auditable, and do not rely on global consensus or continuous
+connectivity.
+
+XEQUES enables long-lived autonomous infrastructure—such as satellites,
+industrial systems, and critical infrastructure—to prove correct
+command execution even in adversarial or disconnected environments.
+We formalize the execution semantics, security invariants, and threat
+model, and present a reference implementation demonstrating feasibility.
+
+\section{Threat Model}
+
+XEQUES is designed for adversarial environments where communication
+channels, authorities, and long-lived devices may be partially or fully
+compromised.
+
+\subsection{Adversarial Capabilities}
+
+We assume an adversary with the following capabilities:
+
+\begin{itemize}
+\item Full network visibility, including interception, replay, and reordering of commands
+\item Ability to compromise or impersonate command authorities
+\item Long-term storage of observed traffic for future cryptanalysis
+\item Quantum-capable computation against classical cryptographic schemes
+\end{itemize}
+
+\subsection{Adversarial Limitations}
+
+We assume the adversary \emph{cannot}:
+
+\begin{itemize}
+\item Forge post-quantum secure signatures without access to device private keys
+\item Alter the internal execution function of a correctly functioning device
+\item Produce a valid execution receipt without actual command execution
+\end{itemize}
+
+\subsection{Trust Assumptions}
+
+XEQUES minimizes trust assumptions:
+
+\begin{itemize}
+\item Authorities may be compromised after command issuance
+\item Devices may be offline for extended periods
+\item Verification may occur long after execution
+\end{itemize}
+
+The sole root of trust is the device-held private key used to sign
+execution receipts.
+
+\subsection{Security Objective}
+
+The primary security objective of XEQUES is:
+
+\begin{quote}
+\textbf{To make unauthorized or unexecuted commands
+cryptographically indistinguishable from non-events.}
+\end{quote}
+
+An adversary who cannot produce a valid receipt cannot convince any
+verifier that a command was executed.
+
+\section{Cryptographic Assumptions and Primitives}
+
+XEQUES relies on post-quantum secure cryptographic primitives.
+
+\subsection{Signature Scheme}
+Each device possesses a post-quantum secure keypair.
+
+\subsection{Hash Function}
+A collision-resistant hash binds execution state.
+
+\subsection{Sequencing and Freshness}
+Monotonic sequence numbers prevent replay attacks.
+
+\subsection{Security Guarantee}
+Receipt forgery implies compromise of the device secret key.
+
+\section{Protocol Flow}
+
+This section specifies the end-to-end execution and verification flow of XEQUES.
+
+\subsection{Actors}
+\begin{itemize}
+\item Authority: Issues authorized commands
+\item Device: Executes commands and emits receipts
+\item Verifier: Independently validates execution
+\end{itemize}
+
+\subsection{Command Issuance}
+The Authority signs a command using a post-quantum signature scheme.
+Each command includes a unique sequence number and validity constraints.
+
+\subsection{Command Verification}
+Upon receipt, the Device verifies the Authority signature.
+Invalid or replayed commands are rejected prior to execution.
+
+\subsection{Execution}
+If verification succeeds, the Device executes the command deterministically.
+Execution produces a new internal state and observable effect.
+
+\subsection{Receipt Generation}
+After execution, the Device constructs an execution receipt.
+The receipt binds the command, prior state, resulting state, and effects.
+
+\subsection{Receipt Publication}
+Receipts may be stored locally, transmitted, or published to an append-only log.
+XEQUES does not mandate a global consensus layer.
+
+\subsection{Verification}
+Any Verifier can independently validate a receipt offline.
+Successful verification implies the command was executed as claimed.
+
+\subsection{Finality Property}
+Execution is final once a valid receipt exists.
+No external ordering or confirmation is required.
+
+\section{Security Invariants and Theorems}
+
+XEQUES is defined by a small set of security invariants.
+These invariants hold independently of network topology, availability, or consensus.
+
+\subsection{Invariant 1: Execution Authenticity}
+A valid receipt implies the command was executed by the claimed device.
+This follows from the unforgeability of the device signature key.
+
+\subsection{Invariant 2: Execution Integrity}
+A receipt cryptographically binds the command input, prior state, resulting state, and execution effects.
+Any modification invalidates the receipt signature.
+
+\subsection{Invariant 3: Non-Equivocation}
+A device cannot produce two distinct valid receipts for the same command sequence number.
+Violation implies compromise of the device private key.
+
+\subsection{Invariant 4: Replay Resistance}
+Commands include monotonic sequence numbers.
+Devices reject commands with stale or duplicate sequence numbers.
+
+\subsection{Invariant 5: Offline Verifiability}
+Receipt verification requires no online interaction.
+All verification inputs are contained within the receipt.
+
+\subsection{Theorem 1: Execution Finality}
+Once a valid receipt exists, execution is final and irreversible.
+No external consensus or confirmation is required.
+
+\subsection{Theorem 2: Receipt Forgery Equivalence}
+Producing a valid receipt without execution is computationally equivalent to breaking the underlying post-quantum signature scheme.
+
+\subsection{Theorem 3: Authority Compromise Containment}
+Compromise of an Authority key allows unauthorized commands.
+It does not allow forging execution receipts.
+
+\subsection{Discussion}
+XEQUES shifts the root of trust from command issuance to command execution.
+This enables strong guarantees for autonomous systems operating in adversarial or disconnected environments.
+
+\section{Comparative Analysis}
+
+This section compares XEQUES against existing trust and coordination systems.
+We focus on the unit of trust each system provides.
+
+\subsection{Blockchains}
+Blockchains provide consensus over ordering of transactions.
+They do not prove that a real-world action was executed.
+Execution is assumed, not verified.
+
+XEQUES does not order commands globally.
+Instead, it proves that a specific device executed a specific command.
+Finality exists at the device level, not the network level.
+
+\subsection{Public Key Infrastructure (PKI)}
+PKI proves identity and authorization.
+It does not bind authorization to execution.
+
+XEQUES extends identity into execution.
+A receipt proves not who may act, but that action occurred.
+
+\subsection{Secure Logging Systems}
+Secure logs provide tamper-evident records.
+They are passive and observational.
+
+XEQUES receipts are active.
+They are generated only as a result of execution.
+
+\subsection{Trusted Execution Environments (TEE)}
+TEEs rely on hardware trust anchors and remote attestation.
+They introduce vendor dependencies and centralized roots of trust.
+
+XEQUES is hardware-agnostic.
+Trust is rooted in cryptography and execution semantics, not hardware vendors.
+
+\subsection{Why XEQUES Is New}
+Existing systems prove authorization, ordering, or logging.
+None treat execution as the primary cryptographic object.
+
+XEQUES introduces execution receipts as a Layer-1 primitive.
+This enables verification of real-world actions in adversarial and disconnected environments.
+
+\section{Comparative Analysis}
+
+This section compares XEQUES against existing trust and coordination systems.
+We focus on the unit of trust each system provides.
+
+\subsection{Blockchains}
+Blockchains provide consensus over ordering of transactions.
+They do not prove that a real-world action was executed.
+Execution is assumed, not verified.
+
+XEQUES does not order commands globally.
+Instead, it proves that a specific device executed a specific command.
+Finality exists at the device level, not the network level.
+
+\subsection{Public Key Infrastructure (PKI)}
+PKI proves identity and authorization.
+It does not bind authorization to execution.
+
+XEQUES extends identity into execution.
+A receipt proves not who may act, but that action occurred.
+
+\subsection{Secure Logging Systems}
+Secure logs provide tamper-evident records.
+They are passive and observational.
+
+XEQUES receipts are active.
+They are generated only as a result of execution.
+
+\subsection{Trusted Execution Environments (TEE)}
+TEEs rely on hardware trust anchors and remote attestation.
+They introduce vendor dependencies and centralized roots of trust.
+
+XEQUES is hardware-agnostic.
+Trust is rooted in cryptography and execution semantics, not hardware vendors.
+
+\subsection{Why XEQUES Is New}
+Existing systems prove authorization, ordering, or logging.
+None treat execution as the primary cryptographic object.
+
+XEQUES introduces execution receipts as a Layer-1 primitive.
+This enables verification of real-world actions in adversarial and disconnected environments.
+
+\section{Threat Model}
+
+We consider a strong adversary with the following capabilities:
+
+\begin{itemize}
+\item Full network visibility and control (eavesdropping, replay, reordering)
+\item Ability to compromise command authorities
+\item Long-term observation of device behavior
+\item Access to classical and quantum computational resources
+\end{itemize}
+
+The adversary is assumed \textbf{unable} to:
+
+\begin{itemize}
+\item Forge post-quantum secure device signatures
+\item Produce valid execution receipts without actual device execution
+\item Modify a receipt without invalidating its signature
+\end{itemize}
+
+\subsection{Trust Assumptions}
+
+XEQUES assumes the device private key remains confidential.
+If the device key is compromised, security degrades explicitly and detectably.
+
+\subsection{Security Objective}
+
+The core security objective of XEQUES is:
+
+\begin{quote}
+\textbf{No valid execution receipt can exist without the corresponding execution occurring on the device.}
+\end{quote}
+
+This shifts trust from authorities and networks to \textit{physical execution itself}.
