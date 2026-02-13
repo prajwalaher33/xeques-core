@@ -857,3 +857,53 @@ The core security objective of XEQUES is:
 \end{quote}
 
 This shifts trust from authorities and networks to \textit{physical execution itself}.
+
+\section{Cryptographic Assumptions}
+
+XEQUES relies on a minimal set of cryptographic primitives.
+The security of the protocol reduces directly to the security of these primitives.
+
+\subsection{Signature Scheme}
+
+Each device possesses a long-term post-quantum secure signing keypair.
+
+Required properties:
+
+\begin{itemize}
+\item Existential unforgeability under chosen-message attack (EUF-CMA)
+\item Resistance to known quantum attacks
+\item Deterministic or randomized signing with explicit domain separation
+\end{itemize}
+
+Concrete instantiations MAY include lattice-based schemes such as Dilithium.
+
+\subsection{Hash Function}
+
+A collision-resistant hash function $ is used to bind:
+
+\begin{itemize}
+\item Command contents
+\item Pre-execution state
+\item Post-execution state
+\item Execution effects
+\end{itemize}
+
+The hash function MUST resist both classical and quantum collision attacks.
+
+\subsection{Key Separation}
+
+Authority keys and device keys are cryptographically distinct.
+Compromise of an authority key does not enable receipt forgery.
+
+\subsection{Cryptographic Minimalism}
+
+XEQUES intentionally avoids:
+
+\begin{itemize}
+\item Consensus algorithms
+\item Time synchronization assumptions
+\item Trusted execution environments
+\item Network-based trust assumptions
+\end{itemize}
+
+The protocol security depends solely on device-held secret keys and correct execution.
