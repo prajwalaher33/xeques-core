@@ -236,3 +236,107 @@ Execution becomes cryptographically final.
 
 This property has not existed in distributed systems before.
 
+---
+
+## 11. Threat Model
+
+We assume a Dolev–Yao adversary with full network control.
+
+The adversary MAY:
+- Observe, delay, replay, reorder, and inject messages
+- Compromise command authorities
+- Perform classical and quantum cryptanalysis
+- Retain long-term archives of all communications
+
+The adversary MAY NOT:
+- Extract device private keys without physical compromise
+- Cause execution without triggering the execution function
+- Produce valid execution receipts without actual execution
+
+Physical compromise of the device invalidates guarantees after the compromise time.
+
+---
+
+## 12. Security Theorems
+
+### Theorem 1 (Execution Soundness)
+
+If a receipt verifies under the device public key, then the corresponding command was executed.
+
+*Argument:*  
+Receipt generation is bound to the execution function. Forgery implies either
+post-quantum signature forgery or bypassing execution, both assumed infeasible.
+
+---
+
+### Theorem 2 (Non-Repudiation of Execution)
+
+A device cannot deny execution of a command for which it emitted a receipt.
+
+*Argument:*  
+Receipts are signed using a device-unique private key and are independently verifiable.
+
+---
+
+### Theorem 3 (Replay Resistance)
+
+Receipts cannot be reused to prove execution of a different command.
+
+*Argument:*  
+Receipts bind command, state transition, and execution effect via collision-resistant hashing.
+
+---
+
+## 13. Comparison to Prior Systems
+
+| System | Proves | Cannot Prove |
+|------|-------|--------------|
+| PKI | Authorization | Execution |
+| Blockchains | Ordering | Physical action |
+| Logs | Recording | Authentic execution |
+| TEEs | Internal state | External effects |
+| **XEQUES (PoCC)** | **Execution itself** | Global ordering |
+
+XEQUES is the first system to elevate *execution* to a Layer-1 trust primitive.
+
+---
+
+## 14. Limitations and Non-Goals
+
+PoCC does NOT:
+- Provide global consensus
+- Guarantee liveness
+- Prevent physical compromise
+- Enforce policy or intent
+- Replace blockchains or PKI
+
+PoCC is intentionally minimal.
+
+---
+
+## 15. Deployment Profiles
+
+### Satellite Systems
+- Extreme latency
+- Offline verification
+- Long mission lifetimes
+- Post-mission auditability
+
+### Power Grids
+- Regulatory compliance
+- Incident forensics
+- Authority compromise containment
+
+### Autonomous Drones
+- Contested environments
+- Execution attribution
+- Post-incident analysis
+
+---
+
+## 16. Conclusion
+
+Proof-of-Command-Correctness introduces a new Layer-1 primitive:
+cryptographically verifiable execution.
+
+This property has not previously existed in distributed systems.
