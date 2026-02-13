@@ -1121,3 +1121,52 @@ cryptographically finalized object.
 \textbf{Summary:}
 XEQUES introduces a new trust primitive orthogonal to identity,
 consensus, and attestation.
+
+\section{Deployment Profiles and Practical Constraints}
+
+XEQUES is designed for environments where connectivity, latency,
+and trust assumptions are fundamentally constrained.
+
+\subsection{Space Systems}
+
+Satellites operate under high latency, intermittent connectivity,
+and multi-decade lifetimes.
+
+XEQUES enables command execution to be verified offline, long after
+the command was issued, without requiring real-time consensus.
+
+\subsection{Air-Gapped and High-Security Infrastructure}
+
+Critical systems such as power grids and defense platforms are often
+air-gapped or partially disconnected.
+
+XEQUES receipts can be verified independently without contacting
+the issuing authority or a central ledger.
+
+\subsection{Long-Lived Autonomous Devices}
+
+Autonomous infrastructure frequently outlives the cryptographic
+assumptions under which it was deployed.
+
+XEQUES supports post-quantum signatures and receipt formats that
+remain verifiable decades after execution.
+
+\subsection{Failure and Compromise Model}
+
+In XEQUES, authority compromise does not invalidate past execution.
+
+Device compromise is explicitly detectable through receipt analysis.
+
+\subsection{Operational Summary}
+
+\begin{itemize}
+\item No online consensus required
+\item No trusted third-party verifier
+\item Offline, delayed, and post-mortem verification supported
+\item Designed for post-quantum migration paths
+\end{itemize}
+
+\begin{quote}
+\textbf{XEQUES is deployable where blockchains, PKI, and
+remote attestation fundamentally fail.}
+\end{quote}
