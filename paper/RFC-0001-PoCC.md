@@ -131,3 +131,108 @@ PoCC is applicable to:
 ## 10. References
 
 [NIST-PQC] NIST Post-Quantum Cryptography Project
+## 11. Threat Model
+
+We consider a Dolev–Yao adversary with full network control.
+The adversary MAY:
+- Observe, delay, replay, reorder, and inject messages
+- Compromise command authorities
+- Perform classical and quantum cryptanalysis
+- Possess long-term archives of all traffic
+
+The adversary MAY NOT:
+- Extract private device keys without physical compromise
+- Execute commands on the device without triggering execution logic
+- Produce valid execution receipts without executing the command
+
+Physical device compromise is considered out-of-scope after compromise time.
+
+---
+
+## 12. Security Theorems
+
+### Theorem 1 (Execution Soundness)
+
+If a valid receipt r verifies under device public key pk_D,
+then the corresponding command was executed by the device.
+
+*Sketch:*  
+Receipt generation is bound to the execution function δ.
+Forging r implies forging a post-quantum signature or bypassing δ,
+both assumed infeasible.
+
+---
+
+### Theorem 2 (Non-Repudiation of Execution)
+
+A device cannot deny execution of a command for which it emitted a receipt.
+
+*Sketch:*  
+Receipts are signed using a device-unique private key.
+Verification is offline and does not depend on authorities.
+
+---
+
+### Theorem 3 (Replay Resistance)
+
+A receipt cannot be reused to prove execution of a different command.
+
+*Sketch:*  
+Receipts bind command, state transition, and execution effect via hashing.
+
+---
+
+## 13. Comparison to Prior Systems
+
+| System | What it Proves | What it Cannot Prove |
+|------|---------------|----------------------|
+| PKI | Authorization | Execution |
+| Blockchains | Ordering | Physical execution |
+| Logs | Event recording | Authentic execution |
+| Trusted Execution Environments | Internal state | External action |
+| **XEQUES (PoCC)** | **Execution itself** | Global ordering |
+
+PoCC is the first protocol to elevate *execution* to a Layer-1 trust primitive.
+
+---
+
+## 14. Limitations and Non-Goals
+
+PoCC intentionally does NOT:
+- Provide global consensus
+- Guarantee liveness
+- Prevent physical compromise
+- Enforce policy or intent
+- Replace blockchains or PKI
+
+PoCC is a *minimal execution finality layer*.
+
+---
+
+## 15. Deployment Profiles
+
+### 15.1 Satellite Systems
+- High latency
+- Offline verification
+- Long mission lifetimes
+- Ground commands verified years later
+
+### 15.2 Power Grids
+- Regulatory auditability
+- Incident forensics
+- Authority compromise containment
+
+### 15.3 Autonomous Drones
+- Contested environments
+- Command authenticity vs execution proof
+- Post-incident attribution
+
+---
+
+## 16. Conclusion
+
+XEQUES introduces Proof-of-Command-Correctness as a new Layer-1 primitive.
+Execution becomes cryptographically final.
+
+This property has not existed in distributed systems before.
+
